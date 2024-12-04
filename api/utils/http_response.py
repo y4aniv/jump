@@ -16,6 +16,10 @@ class HTTPResponse:
 
         INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR"
         NOT_FOUND = "NOT_FOUND"
+        METHOD_NOT_ALLOWED = "METHOD_NOT_ALLOWED"
+        UNSUPPORTED_MEDIA_TYPE = "UNSUPPORTED_MEDIA_TYPE"
+        UNAUTHORIZED = "UNAUTHORIZED"
+        FORBIDDEN = "FORBIDDEN"
 
     def success(
         data: Dict[str, Any] = {},
