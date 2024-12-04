@@ -16,6 +16,7 @@
     "lint:fix:js": "eslint --fix '**/*.{js,ts,tsx}'",
     "lint:fix:css": "stylelint --fix '**/*.{css,scss}'",
     "lint:fix:python": "autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place . && black . && isort .",
+    "test:backend": "pytest",
     "format": "npm run format:js && npm run format:css && npm run format:python",
     "format:js": "prettier --write '**/*.{js,ts,tsx}'",
     "format:css": "prettier --write '**/*.{css,scss}'",
