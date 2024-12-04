@@ -32,6 +32,11 @@
     "*.{css,scss}": [
       "stylelint --fix",
       "prettier --write"
+    ],
+    "*.py": [
+      "autoflake --remove-all-unused-imports --remove-duplicate-keys --remove-unused-variables --in-place",
+      "isort --profile black",
+      "black"
     ]
   },
   "dependencies": {
