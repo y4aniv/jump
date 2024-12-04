@@ -3,11 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "prepare": "husky"
+    "dev:frontend": "next dev --turbopack",
+    "dev:backend": "python3 -m flask --app api/app.py --debug run --host localhost --port 8080",
+    "build:frontend": "next build",
+    "start:frontend": "next start",
+    "start:backend": "python3 -m gunicorn --bind 0.0.0.0:8080 api.app:app",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:python",
+    "lint:js": "eslint '**/*.{js,ts,tsx}'",
+    "lint:css": "stylelint '**/*.{css,scss}'",
+    "lint:python": "flake8",
+    "lint:fix": "npm run lint:fix:js && npm run lint:fix:css && npm run lint:fix:python",
+    "lint:fix:js": "eslint --fix '**/*.{js,ts,tsx}'",
+    "lint:fix:css": "stylelint --fix '**/*.{css,scss}'",
+    "lint:fix:python": "autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place . && black . && isort .",
+    "format": "npm run format:js && npm run format:css && npm run format:python",
+    "format:js": "prettier --write '**/*.{js,ts,tsx}'",
+    "format:css": "prettier --write '**/*.{css,scss}'",
+    "format:python": "black . && isort .",
+    "secure:python": "bandit -r . --exclude './node_modules'",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
