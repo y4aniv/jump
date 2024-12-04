@@ -8,6 +8,16 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss}": [
+      "stylelint --fix",
+      "prettier --write"
+    ]
+  },
   "dependencies": {
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
