@@ -16,19 +16,17 @@ class AuthRegisterSchema(Schema):
         Normalize the data before validation.
         """
         if isinstance(data.get("firstName"), str):
-            data["first_name"] = data["firstName"].strip()
+            data["firstName"] = data["firstName"].strip().title()
 
         if isinstance(data.get("lastName"), str):
-            data["last_name"] = data["lastName"].strip()
+            data["lastName"] = data["lastName"].strip().title()
 
         if isinstance(data.get("email"), str):
             data["email"] = data["email"].strip().lower()
 
         return data
 
-    first_name = fields.String(
-        required=True, validate=validate.Regexp(Regex.FIRST_NAME)
-    )
-    last_name = fields.String(required=True, validate=validate.Regexp(Regex.LAST_NAME))
+    firstName = fields.String(required=True, validate=validate.Regexp(Regex.FIRST_NAME))
+    lastName = fields.String(required=True, validate=validate.Regexp(Regex.LAST_NAME))
     email = fields.Email(required=True, validate=validate.Regexp(Regex.EMAIL))
     password = fields.String(required=True, validate=validate.Regexp(Regex.PASSWORD))
