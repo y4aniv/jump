@@ -20,6 +20,8 @@ class HTTPResponse:
         UNSUPPORTED_MEDIA_TYPE = "UNSUPPORTED_MEDIA_TYPE"
         UNAUTHORIZED = "UNAUTHORIZED"
         FORBIDDEN = "FORBIDDEN"
+        MISSING_FIELDS = "MISSING_FIELDS"
+        INVALID_FIELDS = "INVALID_FIELDS"
 
     def success(
         data: Dict[str, Any] = {},
