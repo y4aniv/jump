@@ -6,7 +6,13 @@ from sqlalchemy import DateTime, Index, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
-    pass
+    from models.notification import Notification
+    from models.store_user import StoreUser
+    from models.user_cart import UserCart
+    from models.user_favorite import UserFavorite
+    from models.user_order import UserOrder
+    from models.user_reset_password import UserResetPassword
+    from models.user_session import UserSession
 
 
 class User(Base):

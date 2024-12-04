@@ -6,7 +6,18 @@ from sqlalchemy import DateTime, Float, Index, Integer, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
-    pass
+    from models.notification import Notification
+    from models.pickup_slot import PickupSlot
+    from models.store_category import StoreCategory
+    from models.store_hours import StoreHours
+    from models.store_local_settings import StoreLocalSettings
+    from models.store_promotion import StorePromotion
+    from models.store_product import StoreProduct
+    from models.store_review import StoreReview
+    from models.store_user import StoreUser
+    from models.user_cart import UserCart
+    from models.user_favorite import UserFavorite
+    from models.user_order import UserOrder
 
 
 class Store(Base):

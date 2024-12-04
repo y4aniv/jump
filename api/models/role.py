@@ -6,7 +6,7 @@ from sqlalchemy import DateTime, Text, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
-    pass
+    from models.store_user import StoreUser
 
 
 class Role(Base):
