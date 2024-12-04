@@ -1,0 +1,371 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:../storage/database/default.db"
+}
+
+model Store {
+  id            String   @id @default(uuid())
+  short_name    String
+  legal_name    String
+  description   String?
+  address       String
+  city          String
+  state         String
+  zip           String
+  country       String
+  latitude      Float?
+  longitude     Float?
+  phone         String
+  email         String
+  website       String?
+  logo          String
+  pickup_note   String?
+  pricing_level Int      @default(1) // 1: $, 2: $$, 3: $$$, 4: $$$$
+  status        String   @default("active")
+  stripe_id     String?  @unique
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  hours          StoreHours[]
+  reviews        StoreReview[]
+  categories     StoreCategory[]
+  products       StoreProduct[]
+  promotions     StorePromotion[]
+  local_settings StoreLocalSettings[]
+  carts          UserCart[]
+  favorites      UserFavorite[]
+  orders         UserOrder[]
+  notifications  Notification[]
+  pickup_slots   PickupSlot[]
+  users          StoreUser[]
+}
+
+model StorePromotion {
+  id             String   @id @default(uuid())
+  store_id       String
+  name           String
+  description    String?
+  discount_type  String // percentage, fixed
+  discount_value Float
+  start_date     DateTime
+  end_date       DateTime
+  is_active      Boolean  @default(true)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  product_promotions  StoreProductPromotion[]
+  category_promotions StoreCategoryPromotion[]
+
+  store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
+}
+
+model StoreProductPromotion {
+  id           String   @id @default(uuid())
+  product_id   String
+  promotion_id String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  product   StoreProduct   @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  promotion StorePromotion @relation(fields: [promotion_id], references: [id], onDelete: Cascade)
+}
+
+model StoreCategoryPromotion {
+  id           String   @id @default(uuid())
+  category_id  String
+  promotion_id String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  category  StoreCategory  @relation(fields: [category_id], references: [id], onDelete: Cascade)
+  promotion StorePromotion @relation(fields: [promotion_id], references: [id], onDelete: Cascade)
+}
+
+model StoreHours {
+  id         String    @id @default(uuid())
+  store_id   String
+  day        Int // 0: Sunday, 1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday
+  is_open    Boolean
+  open_at    DateTime?
+  close_at   DateTime?
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
+}
+
+model StoreReview {
+  id       String  @id @default(uuid())
+  store_id String
+  order_id String  @unique
+  rating   Int // between 1 and 5
+  review   String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  store Store     @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  order UserOrder @relation(fields: [order_id], references: [id], onDelete: Cascade)
+}
+
+model StoreCategory {
+  id          String   @id @default(uuid())
+  store_id    String
+  name        String
+  description String?
+  parent_id   String? // null for top-level categories
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  products   StoreProduct[]
+  promotions StoreCategoryPromotion[]
+
+  store    Store          @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  parent   StoreCategory?  @relation("CategoryHierarchy", fields: [parent_id], references: [id], onDelete: SetNull)
+  children StoreCategory[] @relation("CategoryHierarchy")
+}
+
+model StoreLocalSettings {
+  id         String   @id @default(uuid())
+  store_id   String
+  key        String // e.g. currency, timezone, language
+  value      String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
+}
+
+model StoreProduct {
+  id          String   @id @default(uuid())
+  store_id    String
+  category_id String?
+  name        String
+  description String?
+  price       Float // in cents
+  quantity    Float? // e.g. 1.5 for 1.5 kg
+  unit        String? // e.g. kg, l, pcs
+  sku         String
+  status      String   @default("active")
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  metadata     StoreProductMetadata[]
+  images       StoreProductImage[]
+  promotions   StoreProductPromotion[]
+  cart_items   UserCartItem[]
+  tags         StoreProductTag[]
+  return_items OrderReturnItem[]
+
+  store    Store         @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  category StoreCategory? @relation(fields: [category_id], references: [id], onDelete: SetNull)
+}
+
+model StoreProductTag {
+  id         String   @id @default(uuid())
+  product_id String
+  tag        String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  product StoreProduct @relation(fields: [product_id], references: [id], onDelete: Cascade)
+}
+
+model StoreProductMetadata {
+  id         String   @id @default(uuid())
+  product_id String
+  key        String // e.g. weight, dimensions, color
+  value      String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  product StoreProduct @relation(fields: [product_id], references: [id], onDelete: Cascade)
+}
+
+model StoreProductImage {
+  id         String   @id @default(uuid())
+  product_id String
+  url        String
+  alt_text   String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  product StoreProduct @relation(fields: [product_id], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id         String @id @default(uuid())
+  first_name String
+  last_name  String
+  email      String @unique
+  password   String
+  avatar     String
+
+  created_at           DateTime            @default(now())
+  updated_at           DateTime            @updatedAt
+  carts                UserCart[]
+  favorites            UserFavorite[]
+  orders               UserOrder[]
+  notifications        Notification[]
+  sessions             UserSession[]
+  reset_password_token UserResetPassword[]
+  stores               StoreUser[]
+}
+
+model UserCart {
+  id         String   @id @default(uuid())
+  user_id    String
+  store_id   String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user  User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  store Store          @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  items UserCartItem[]
+  order UserOrder?
+}
+
+model UserCartItem {
+  id               String   @id @default(uuid())
+  cart_id          String
+  product_id       String
+  quantity         Float
+  secondary_action String? // if the product is not available, e.g. notify me, refund me, etc.
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  cart    UserCart     @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  product StoreProduct @relation(fields: [product_id], references: [id], onDelete: Cascade)
+}
+
+model UserFavorite {
+  id         String   @id @default(uuid())
+  user_id    String
+  store_id   String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user  User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
+}
+
+model UserOrder {
+  id             String   @id @default(uuid())
+  user_id        String
+  store_id       String
+  cart_id        String   @unique
+  pickup_slot_id String
+  total          Float
+  status         String   @default("pending") // pending, confirmed, cancelled, picked-up
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  review  StoreReview?
+  payment PaymentTransaction?
+  returns OrderReturn[]
+  user    User                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  store   Store               @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  cart    UserCart            @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  slot    PickupSlot          @relation(fields: [pickup_slot_id], references: [id], onDelete: Cascade)
+}
+
+model PaymentTransaction {
+  id         String   @id @default(uuid())
+  order_id   String   @unique
+  stripe_id  String   @unique
+  amount     Float // in cents
+  currency   String
+  status     String   @default("pending") // pending, succeeded, failed
+  type       String // payment, refund
+  method     String // e.g. card, paypal, apple_pay
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  order UserOrder @relation(fields: [order_id], references: [id], onDelete: Cascade)
+}
+
+model OrderReturn {
+  id          String   @id @default(uuid())
+  order_id    String
+  reason      String
+  description String?
+  status      String   @default("pending") // pending, approved, rejected
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  items OrderReturnItem[]
+
+  order UserOrder @relation(fields: [order_id], references: [id], onDelete: Cascade)
+}
+
+model OrderReturnItem {
+  id         String   @id @default(uuid())
+  return_id  String
+  product_id String
+  quantity   Float
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  return  OrderReturn  @relation(fields: [return_id], references: [id], onDelete: Cascade)
+  product StoreProduct @relation(fields: [product_id], references: [id], onDelete: Cascade)
+}
+
+model PickupSlot {
+  id         String   @id @default(uuid())
+  store_id   String
+  start_time DateTime
+  end_time   DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  store  Store       @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  orders UserOrder[]
+}
+
+model Notification {
+  id         String   @id @default(uuid())
+  user_id    String?
+  store_id   String?
+  title      String
+  message    String
+  link       String?
+  type       String // info, warning, error
+  is_read    Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user  User?  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  store Store? @relation(fields: [store_id], references: [id], onDelete: Cascade)
+}
+
+model UserSession {
+  id         String   @id @default(uuid())
+  user_id    String
+  expires_at DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model UserResetPassword {
+  id         String   @id @default(uuid())
+  user_id    String
+  expires_at DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model StoreUser {
+  id         String   @id @default(uuid())
+  store_id   String
+  user_id    String
+  role       String   @default("staff") // staff, owner
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
