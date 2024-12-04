@@ -4,3 +4,4 @@ autoflake
 bandit
 isort
 sqlacodegen-v2
+pytest
