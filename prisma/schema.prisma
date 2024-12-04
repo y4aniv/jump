@@ -362,10 +362,21 @@ model StoreUser {
   id         String   @id @default(uuid())
   store_id   String
   user_id    String
-  role       String   @default("staff") // staff, owner
+  role_id    String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   store Store @relation(fields: [store_id], references: [id], onDelete: Cascade)
   user  User  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  role Role  @relation(fields: [role_id], references: [id], onDelete: Cascade)
+}
+
+model Role {
+  id         String   @id @default(uuid())
+  name       String
+  workflow   String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  users StoreUser[]
 }
