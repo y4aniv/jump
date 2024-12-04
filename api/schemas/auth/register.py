@@ -14,6 +14,10 @@ class AuthRegisterSchema(Schema):
     def normalize_data(self, data: Dict[str, Any], **kwargs) -> Dict[str, Any]:
         """
         Normalize the data before validation.
+
+        :param data: The data to normalize.
+
+        :return: The normalized data.
         """
         if isinstance(data.get("firstName"), str):
             data["firstName"] = data["firstName"].strip().title()
