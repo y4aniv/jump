@@ -8,6 +8,12 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 if TYPE_CHECKING:
     from models.store import Store
     from models.store_category import StoreCategory
+    from models.store_product_image import StoreProductImage
+    from models.store_product_metadata import StoreProductMetadata
+    from models.store_product_promotion import StoreProductPromotion
+    from models.store_product_tag import StoreProductTag
+    from models.user_cart_item import UserCartItem
+    from models.order_return_item import OrderReturnItem
 
 
 class StoreProduct(Base):

@@ -10,6 +10,9 @@ if TYPE_CHECKING:
     from models.store import Store
     from models.user import User
     from models.user_cart import UserCart
+    from models.order_return import OrderReturn
+    from models.payment_transaction import PaymentTransaction
+    from models.store_review import StoreReview
 
 
 class UserOrder(Base):

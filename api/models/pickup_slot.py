@@ -7,6 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from models.store import Store
+    from models.user_order import UserOrder
 
 
 class PickupSlot(Base):

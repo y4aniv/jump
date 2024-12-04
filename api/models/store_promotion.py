@@ -7,6 +7,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from models.store import Store
+    from models.store_category_promotion import StoreCategoryPromotion
+    from models.store_product_promotion import StoreProductPromotion
 
 
 class StorePromotion(Base):

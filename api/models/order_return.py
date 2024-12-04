@@ -7,6 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
     from models.user_order import UserOrder
+    from models.order_return_item import OrderReturnItem
 
 
 class OrderReturn(Base):

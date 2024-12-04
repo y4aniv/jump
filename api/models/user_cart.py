@@ -8,6 +8,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 if TYPE_CHECKING:
     from models.store import Store
     from models.user import User
+    from models.user_cart_item import UserCartItem
+    from models.user_order import UserOrder
 
 
 class UserCart(Base):
