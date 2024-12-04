@@ -43,17 +43,17 @@ class HTTPResponse:
         return response, status
 
     def error(
-        data: Dict[str, Any] = {},
         message: str = Messages.INTERNAL_SERVER_ERROR,
         status: int = HTTPStatus.INTERNAL_SERVER_ERROR,
+        data: Dict[str, Any] = {},
         cookies: List[Dict[str, Any]] = [],
     ) -> tuple:
         """
         Create an error response.
 
-        :param data: The data to be returned.
         :param message: The error message.
         :param status: The HTTP status code.
+        :param data: The data to be returned.
         :param cookies: The cookies to be set.
 
         :return: The response.
