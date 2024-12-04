@@ -21,6 +21,7 @@
     "format:css": "prettier --write '**/*.{css,scss}'",
     "format:python": "black . && isort .",
     "secure:python": "bandit -r . --exclude './node_modules'",
+    "prisma:migrate": "prisma migrate dev",
     "prepare": "husky install"
   },
   "lint-staged": {
