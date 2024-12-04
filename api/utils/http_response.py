@@ -15,12 +15,13 @@ class HTTPResponse:
         """
 
         INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR"
+        NOT_FOUND = "NOT_FOUND"
 
     def success(
         data: Dict[str, Any] = {},
         status: int = HTTPStatus.OK,
         cookies: List[Dict[str, Any]] = [],
-    ):
+    ) -> tuple:
         """
         Create a successful response.
 
@@ -42,7 +43,7 @@ class HTTPResponse:
         message: str = Messages.INTERNAL_SERVER_ERROR,
         status: int = HTTPStatus.INTERNAL_SERVER_ERROR,
         cookies: List[Dict[str, Any]] = [],
-    ):
+    ) -> tuple:
         """
         Create an error response.
 
