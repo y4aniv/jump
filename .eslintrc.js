@@ -3,7 +3,6 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: "module",
-    project: "./tsconfig.json",
   },
   extends: [
     "eslint:recommended",
@@ -24,7 +23,6 @@ module.exports = {
     "prettier/prettier": "warn",
     "react/jsx-uses-react": "off",
     "react/jsx-uses-vars": "error",
-    "react/jsx-no-bind": "warn",
     "react/jsx-curly-brace-presence": [
       "error",
       { props: "always", children: "ignore" },
