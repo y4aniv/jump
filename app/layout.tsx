@@ -11,7 +11,7 @@ const RootLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }): React.ReactElement => {
   return (
-    <html lang="fr">
+    <html lang={"fr"}>
       <body>{children}</body>
     </html>
   );
